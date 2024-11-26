@@ -1,0 +1,52 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using Framework;
+@inherits PanelComponent
+@namespace Framework.UI
+
+<root>
+	<label class="name">@Item.Name</label>
+	<label class="description">@Item.Description</label>
+</root>
+
+@code
+{
+	public GameObject ItemObj { get; set; }
+	public Item Item { get; set; }
+
+	private bool bLookedAt = false;
+
+	protected override void OnAwake()
+	{
+		ItemObj = this.GameObject.Root;
+		Item = ItemObj.Components.Get<Item>();
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( IsProxy ) return;
+		var Player = BaseFramework.FindLocalPlayer();
+		var playerHead = Player.Head;
+		var eyeAngles = Player.eyeAngles.ToRotation();
+
+		Vector3 spawnPosition = playerHead.WorldPosition + ( eyeAngles.Forward * 1000f );
+		var tr = Game.SceneTrace.Ray( playerHead.WorldPosition, spawnPosition )
+			.WithTag( "item" )
+			.Run();
+
+		if ( tr.Hit && tr.GameObject == ItemObj )
+		{
+			bLookedAt = true;
+		}
+
+		if ( bLookedAt )
+		{
+			if ( !tr.Hit || tr.Hit && tr.GameObject != ItemObj )
+			{
+				bLookedAt = false;
+			}
+		}
+
+		SetClass( "active", bLookedAt );
+	}
+}

@@ -1,0 +1,48 @@
+Inventory {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 2%;
+    
+    .Canvas {
+        position: absolute;
+        top: -100%;
+        height: 92%;
+        width: 75%;
+        background-color: rgb(60, 60, 60);
+        opacity: 0;
+        display: flex;
+        padding: 10px;
+        transition: top 0.5s ease-in;
+    }
+
+    .CategoryPanel {
+        width: 10%;
+        background-color: rgb(80, 80, 80);
+        margin-right: 10px;
+        padding: 10px;
+    }
+
+    .InventoryPanel {
+        width: 90%;
+        background-color: rgb(100, 100, 100);
+        padding: 10px;
+    }
+
+    &.active {
+        .Canvas {
+            opacity: 1;
+        }
+    }
+
+    &.animate {
+		.Canvas {
+			top: 0;
+		}
+    }
+}

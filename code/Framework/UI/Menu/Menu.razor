@@ -1,0 +1,61 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using Framework.UI;
+
+@inherits PanelComponent
+@namespace Framework.UI
+
+<root>
+	<ActiveTab @ref="activeTab"></ActiveTab>
+	<div class="TabPanel">
+		<button class="MenuTabBig" onclick="@Close">LEAVE MENU</button>
+		<button class="MenuTabBig">CHARACTERS</button>
+		<button class="MenuTab" onclick=@(()=>activeTab.SetTab( "characterinfo" ))>CHARACTER</button>
+		<button class="MenuTab" onclick=@(()=>activeTab.SetTab( "inventory" ))>INVENTORY</button>
+		<button class="MenuTab">SCOREBOARD</button>
+		<button class="MenuTab">SETTINGS</button>
+		<button class="MenuTab">ADMIN</button>
+	</div>
+</root>
+
+@code
+{
+	public static Menu Instance { get; private set; }
+	private bool bOpen { get; set; } = false;
+	private float fNextInput { get; set; } = 0.0f;
+
+	ActiveTab activeTab;
+
+	protected override void OnStart()
+	{
+		base.OnStart();
+		Instance = this;
+	}
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+		if ( Time.Now < fNextInput ) return;
+
+		if ( Input.Pressed( "Menu" ) && bOpen )
+		{
+			activeTab.Close();
+			bOpen = !bOpen;
+			SetClass( "animate", bOpen );
+			fNextInput = Time.Now + .5f;
+		} else if ( Input.Pressed( "Menu" ) && !bOpen )
+		{
+			activeTab.Open();
+			bOpen = !bOpen;
+			SetClass( "animate", bOpen );
+			fNextInput = Time.Now + .5f;
+		}
+	}
+
+	void Close()
+	{	
+		bOpen = !bOpen;
+		SetClass( "animate", bOpen );
+		fNextInput = Time.Now + .5f;
+	}
+}

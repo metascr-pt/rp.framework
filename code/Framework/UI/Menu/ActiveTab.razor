@@ -1,0 +1,61 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using Framework.UI;
+
+@inherits Panel
+@namespace Framework.UI
+
+<root>
+	<CharacterInfo @ref="characterInfo"></CharacterInfo>
+	<Inventory @ref="inventory"></Inventory>
+</root>
+
+@code
+{
+	CharacterInfo characterInfo;
+	Inventory inventory;
+
+	Panel showing;
+
+	public ActiveTab()
+	{
+		showing = new();
+	}
+
+	public void SetTab( string tab )
+	{
+
+		showing?.SetClass( "active", false );
+		Log.Info( $"1 {showing.ElementName} 2 {tab}" );
+		if ( showing.ElementName.ToLower() != tab.ToLower() )
+		{
+			switch ( tab.ToLower() )
+			{
+				case "characterinfo":
+					Log.Info( "2" );
+					showing = characterInfo;
+					showing.SetClass( "active", true );
+					break;
+				case "inventory":
+					Log.Info( "3" );
+					showing = inventory;
+					showing.SetClass( "active", true );
+					break;
+			}
+			return;
+		}
+		showing = new();
+	}
+
+	public void Open()
+	{
+		showing?.SetClass( "active", true );
+		showing?.SetClass( "animate", true );
+	}
+
+	public void Close()
+	{
+		showing?.SetClass( "active", false );
+		showing?.SetClass( "animate", false );
+	}
+}
